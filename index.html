@@ -4,120 +4,192 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GraphNKI Project Plan</title>
-<meta name="description" content="GraphNKI: agentic, recursively self-improving NKI kernels for graph and sparse AI workloads on AWS Trainium. Project plan and expected outcomes.">
+<meta name="description" content="GraphNKI: agentic, recursively self-improving NKI kernels for graph and sparse AI workloads on AWS Trainium. Interactive project overview.">
 <style>
-:root{--bg:#fbfbf9;--fg:#1d2330;--muted:#5a6272;--line:#dfe2e8;--card:#fff;--accent:#1f4e8c;--accent-soft:#e8eff8;--warm:#b4570f;--warm-soft:#fbefe4}
-@media (prefers-color-scheme:dark){:root{--bg:#12151b;--fg:#e6e8ec;--muted:#9aa3b2;--line:#2a303b;--card:#191d25;--accent:#8db4ea;--accent-soft:#1b2738;--warm:#f0a35e;--warm-soft:#2d2117}}
+:root{--bg:#f7f8fa;--fg:#1b2130;--muted:#5d6676;--line:#dde1e8;--card:#fff;--accent:#2559a8;--accent-soft:#e6eefa;--warm:#c0601a;--ok:#2e8b57;--bad:#c4373a;--pad:#f1d7c2}
+@media (prefers-color-scheme:dark){:root{--bg:#10141b;--fg:#e7e9ee;--muted:#9aa3b3;--line:#283040;--card:#171c25;--accent:#7fa9eb;--accent-soft:#1a2638;--warm:#f0a35e;--ok:#5cc58b;--bad:#ef6b6e;--pad:#4a3424}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-main{max-width:920px;margin:0 auto;padding:40px 16px 64px}
-h1{font-size:clamp(1.6rem,4vw,2.3rem);line-height:1.2;margin:.2em 0 .3em}
-h2{font-size:1.3rem;margin:2.4em 0 .6em;padding-top:.6em;border-top:1px solid var(--line)}
-h3{font-size:1rem;margin:0 0 .3em}
-p{margin:.5em 0}
-.muted{color:var(--muted)}
-.tag{display:inline-block;font-size:.8rem;font-weight:600;letter-spacing:.03em;color:var(--warm);background:var(--warm-soft);padding:3px 10px;border-radius:999px}
-.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.card .k{font-size:.78rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
-ol.timeline{list-style:none;padding:0;margin:0;border-left:2px solid var(--accent);}
-ol.timeline li{position:relative;padding:0 0 18px 22px}
-ol.timeline li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
-ol.timeline b{color:var(--accent)}
-table{width:100%;border-collapse:collapse;font-size:.95rem}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--muted);font-weight:600}
-.fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto}
-.fig svg{display:block;width:100%;min-width:560px;height:auto}
-.fig text{fill:var(--fg);font:13px system-ui,sans-serif}
-.box{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
-.ar{stroke:var(--fg);stroke-width:1.6;fill:none}
-.fb{stroke:var(--warm);stroke-width:1.6;fill:none}
-.dash{stroke-dasharray:5 4}
-.note{border-left:3px solid var(--warm);background:var(--warm-soft);padding:10px 14px;border-radius:0 8px 8px 0}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:32px 16px 56px}
+h1{font-size:clamp(1.5rem,4vw,2.2rem);line-height:1.15;margin:.3em 0 .2em}
+h2{font-size:1.15rem;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 6px}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.04em;color:var(--warm);border:1px solid var(--warm);padding:2px 10px;border-radius:999px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:20px}
+.cap{font-size:.78rem;color:var(--muted)}
+canvas,svg{display:block;width:100%}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.stat{flex:1 1 120px;background:var(--bg);border-radius:10px;padding:8px 12px}
+.stat b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.78rem;color:var(--muted)}
+.controls{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin:8px 0 10px;font-size:.9rem}
+input[type=range]{width:180px;accent-color:var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--fg);padding:6px 12px;font:inherit;cursor:pointer}
+.seg button.on{background:var(--accent);color:#fff}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.tl{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.tl div{border-radius:8px;padding:10px;background:var(--bg);font-size:.82rem;border-top:4px solid var(--line);transition:border-color .4s,background .4s}
+.tl div.on{border-top-color:var(--accent);background:var(--accent-soft)}
+.tl b{display:block;font-size:.75rem;color:var(--muted)}
+.icons{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px}
+.icons div{text-align:center;padding:12px 6px;background:var(--bg);border-radius:10px;font-size:.85rem}
+.icons svg{width:34px;height:34px;margin:0 auto 6px;stroke:var(--accent);fill:none;stroke-width:1.8}
 a{color:var(--accent)}
-footer{margin-top:48px;font-size:.88rem;color:var(--muted)}
+footer{margin-top:28px;font-size:.82rem;color:var(--muted)}
+@media (max-width:640px){.tl{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <main>
-<span class="tag">Proposal stage · planned outcomes, no results reported yet</span>
-<h1>GraphNKI: Agentic and Recursively Self-Improving Kernels for Graph and Sparse AI Workloads on AWS Trainium</h1>
-<p class="muted">Guimu Guo (PI), Department of Computer Science, Rowan University · Submitted to Amazon Research Awards, Build on Trainium, Fall 2026</p>
+<span class="tag">PROPOSAL STAGE · ALL ANIMATIONS ARE ILLUSTRATIVE SIMULATIONS, NOT MEASURED RESULTS</span>
+<h1>GraphNKI</h1>
+<p class="sub">Agentic, recursively self-improving NKI kernels for graph and sparse AI workloads on AWS Trainium · Guimu Guo, Rowan University</p>
 
-<p>Irregular sparse computation makes accelerator software expensive to build and hard to generalize. GraphNKI is a structure-aware agent that generates, verifies, profiles, and improves kernels written in the Neuron Kernel Interface (NKI) on AWS Trainium. Our hypothesis is that optimization conditioned on input structure and validated prior experience finds better kernels under a fixed search budget than structure-oblivious or stateless agents.</p>
-
-<h2>How GraphNKI works</h2>
-<div class="fig" role="img" aria-label="GraphNKI architecture: specification and structure feed the optimization agent, which sends candidates to compile, verify, and profile. Diagnostics feed back to the agent. Validated experience goes to an optimization memory with policy validation, which the agent retrieves from.">
-<svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg">
-<defs><marker id="h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
-<g style="color:var(--fg)">
-<rect class="box" x="10" y="80" width="150" height="56" rx="8"/><text x="85" y="104" text-anchor="middle">Specification</text><text x="85" y="122" text-anchor="middle">and structure</text>
-<rect class="box" x="245" y="80" width="150" height="56" rx="8"/><text x="320" y="104" text-anchor="middle">Optimization</text><text x="320" y="122" text-anchor="middle">agent</text>
-<rect class="box" x="480" y="80" width="150" height="56" rx="8"/><text x="555" y="104" text-anchor="middle">Compile, verify,</text><text x="555" y="122" text-anchor="middle">profile</text>
-<rect class="box" x="225" y="185" width="190" height="56" rx="8"/><text x="320" y="209" text-anchor="middle">Optimization memory</text><text x="320" y="227" text-anchor="middle">and policy validation</text>
-<path class="ar" d="M160 108 H243" marker-end="url(#h)"/>
-<path class="ar" d="M395 108 H478" marker-end="url(#h)"/>
-</g>
-<g style="color:var(--warm)">
-<path class="fb" d="M555 80 V40 H320 V78" marker-end="url(#h)"/>
-<text x="437" y="32" text-anchor="middle" style="fill:var(--warm)">Diagnostics and performance</text>
-</g>
-<g style="color:var(--fg)">
-<path class="ar dash" d="M555 136 V213 H417" marker-end="url(#h)"/>
-<text x="565" y="180">Validated experience</text>
-<path class="ar dash" d="M320 185 V138" marker-end="url(#h)"/>
-<text x="230" y="165">Retrieve / update</text>
-</g>
-</svg>
+<section>
+<h2>1 · The optimization loop</h2>
+<p class="cap">Candidates are compiled, verified, and profiled. Failures return as diagnostics; verified experience enters memory and guides the next candidate.</p>
+<svg id="loop" viewBox="0 0 900 300" aria-label="Animated optimization loop"></svg>
+<div class="stats">
+<div class="stat"><b id="sCand">0</b><span>candidates generated</span></div>
+<div class="stat"><b id="sFail" style="color:var(--bad)">0</b><span>rejected and repaired</span></div>
+<div class="stat"><b id="sOk" style="color:var(--ok)">0</b><span>verified</span></div>
+<div class="stat"><b id="sMem" style="color:var(--accent)">0</b><span>memory records</span></div>
 </div>
-<p class="muted">Inner loop: generate, compile, verify, and repair a kernel for the current task. Outer loop: update retrieval rules and transformation policies across tasks, adopting an update only when it improves a held-out validation set without degrading correctness.</p>
+</section>
 
-<div class="grid">
-<div class="card"><div class="k">Aim 1</div><h3>Generate, measure, repair</h3><p>Structure descriptors (degree quantiles, segment skew, feature width) guide NKI transformations: tiling, buffering, layout, degree bucketing, fusion. Every candidate is compiled, checked, and timed under a fixed budget.</p></div>
-<div class="card"><div class="k">Aim 2</div><h3>Improve across tasks</h3><p>An optimization-trajectory graph links workloads, kernel variants, transformations, and outcomes. Versioned, reversible policy updates are compared against flat retrieval and a frozen-policy agent.</p></div>
-<div class="card"><div class="k">Aim 3</div><h3>Verify correctness</h3><p>References and final tests stay outside the agent's workspace. Exact checks for set and integer operators, declared tolerances for floating point, edge-case and metamorphic tests.</p></div>
+<section>
+<h2>2 · Why input structure matters on Trainium</h2>
+<p class="cap">Each bar is one vertex's neighbor segment on a synthetic power-law graph. Groups of 128 segments fill one 128-partition NKI tile, padded to the longest segment. Drag the skew; switch to degree bucketing.</p>
+<div class="controls">
+<label>Degree skew <input id="skew" type="range" min="0" max="100" value="35"></label>
+<span class="seg"><button id="bNo" class="on">Arrival order</button><button id="bYes">Degree bucketing</button></span>
 </div>
-
-<h2>Target workloads on Trainium</h2>
-<table>
-<tr><th>Primitive</th><th>Role</th><th>Trainium question</th></tr>
-<tr><td>Segmented neighbor aggregation</td><td>Core graph-learning operator</td><td>How should variable-length segments map onto 128-partition tiles, and when does padding pay off?</td></tr>
-<tr><td>Sparse matrix multiplication (SpMM)</td><td>Core AI primitive</td><td>When does converting to dense blocks for the Tensor engine beat irregular gathers?</td></tr>
-<tr><td>Sparse set intersection</td><td>Graph-mining stress test (conditional on feasibility)</td><td>Which irregular steps belong on GpSimd versus Vector engines?</td></tr>
-</table>
-<p class="muted">Workloads come from OGB and SNAP graphs, split by graph family and structural regime into development, validation, and test sets.</p>
-
-<h2>Expected outcomes and success criteria</h2>
-<div class="note">These are the questions the project is designed to answer. They are targets, not measured results.</div>
-<div class="grid" style="margin-top:14px">
-<div class="card"><div class="k">Criterion 1</div><h3>Correctness</h3><p>All released kernels pass the held-out correctness suite.</p></div>
-<div class="card"><div class="k">Criterion 2</div><h3>Structure helps</h3><p>Under matched budgets, GraphNKI achieves higher geometric-mean speedup over direct NKI baselines than a structure-oblivious agent on held-out workloads.</p></div>
-<div class="card"><div class="k">Criterion 3</div><h3>Experience helps</h3><p>With validated memory, GraphNKI reaches a fixed performance threshold in fewer evaluations than a frozen-policy agent.</p></div>
+<canvas id="tiles" height="260"></canvas>
+<div class="legend"><span><i style="background:var(--accent)"></i>useful work</span><span><i style="background:var(--pad)"></i>padding</span><span><i style="background:var(--line)"></i>tile boundary (128 partitions)</span></div>
+<div class="stats">
+<div class="stat"><b id="uNo">–</b><span>tile utilization, arrival order</span></div>
+<div class="stat"><b id="uYes">–</b><span>tile utilization, bucketed</span></div>
+<div class="stat"><b id="dMax">–</b><span>max / median degree</span></div>
 </div>
-<p>Baselines include direct NKI implementations, available framework operations, a documented human-tuned implementation, and a generic coding agent. Agent comparisons share the base model, tools, examples, and search budget. We report correctness, latency distributions, geometric-mean speedup, time to threshold, tokens, accelerator hours, and preprocessing costs, including workloads where the approach does not help.</p>
+<p class="cap">The best transformation changes with structure. GraphNKI gives the agent these descriptors so it can choose.</p>
+</section>
 
-<h2>Timeline</h2>
-<ol class="timeline">
-<li><b>Months 1–3 · Baselines and feasibility.</b> Operator contracts, baseline NKI kernels, held-out workloads, measurement harness. Release benchmark specifications.</li>
-<li><b>Months 4–6 · Agent optimization loop.</b> Generation, verification, profiling, and repair. Structure-aware versus structure-oblivious comparison. Initial agent release.</li>
-<li><b>Months 7–9 · Recursive improvement.</b> Trajectory retrieval, policy validation, versioned updates. Graph memory versus flat retrieval versus frozen policy. Trajectory release, including failed candidates.</li>
-<li><b>Months 10–12 · Integration and dissemination.</b> End-to-end evaluation, PyTorch custom-operator packaging via torch-neuronx, documentation, and a research paper.</li>
-</ol>
-
-<h2>Planned open-source deliverables</h2>
-<div class="grid">
-<div class="card"><h3>GraphNKI agent</h3><p>The optimization agent with its inner and outer loops.</p></div>
-<div class="card"><h3>Verified NKI kernels</h3><p>Segmented aggregation and SpMM, with set intersection subject to feasibility; packaged as PyTorch custom operators with reference fallbacks.</p></div>
-<div class="card"><h3>Benchmark and correctness suite</h3><p>Operator specifications, tests, and measurement harness.</p></div>
-<div class="card"><h3>Trajectory dataset</h3><p>Versioned optimization trajectories, including unsuccessful branches.</p></div>
+<section>
+<h2>3 · Recursive improvement: the trajectory graph</h2>
+<p class="cap">Kernel variants (nodes) connected by transformations (edges). Periodically the outer loop proposes a policy update and keeps it only if a held-out validation set improves.</p>
+<canvas id="traj" height="320"></canvas>
+<div class="legend"><span><i style="background:var(--ok)"></i>verified, faster</span><span><i style="background:var(--muted)"></i>verified, no gain</span><span><i style="background:var(--bad)"></i>failed verification</span><span><i style="background:var(--warm)"></i>policy update validated</span></div>
+<div class="stats">
+<div class="stat"><b id="pVer">v1</b><span>active policy</span></div>
+<div class="stat"><b id="pAcc">0</b><span>updates accepted</span></div>
+<div class="stat"><b id="pRej">0</b><span>updates rejected</span></div>
 </div>
-<p class="muted">Planned license: Apache 2.0. Artifacts will document model and SDK versions, hardware, search budgets, and data splits.</p>
+</section>
 
-<h2>Team background</h2>
-<p>The PI leads an NSF CRII project on GPU graph-mining frameworks (#2245792). Recent work includes GPU densest-subgraph discovery (SIGMOD 2026), GPU maximal quasi-clique mining (IEEE BigData 2025), GPU k-core decomposition (ICDE 2023), and two GPU papers accepted to IEEE BigData 2026. The group also built <a href="https://wajidmanzoor.github.io/graphMine/system/">GraphMine</a>, an LLM-driven graph-analysis system with a deterministic validation boundary over a native C++/CUDA runtime. PhD students Wajid Manzoor and Muhammad Shaheer will contribute to agent orchestration and NKI kernel development.</p>
+<section>
+<h2>4 · 12-month plan</h2>
+<div class="tl" id="tl">
+<div><b>M1–3</b>Baselines and feasibility</div>
+<div><b>M4–6</b>Agent optimization loop</div>
+<div><b>M7–9</b>Recursive improvement</div>
+<div><b>M10–12</b>Integration and release</div>
+</div>
+<div class="icons">
+<div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>GraphNKI agent</div>
+<div><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg>Verified NKI kernels</div>
+<div><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></svg>Correctness suite</div>
+<div><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="10" cy="18" r="2"/><path d="M8 7l8 1M7 8l2 8M16 10l-5 7"/></svg>Trajectory dataset</div>
+<div><svg viewBox="0 0 24 24"><path d="M8 4l-5 8 5 8M16 4l5 8-5 8"/></svg>Apache 2.0 code</div>
+</div>
+</section>
 
-<footer>Project page for a research proposal. Contact: <a href="mailto:guog@rowan.edu">guog@rowan.edu</a> · <a href="https://guimuguo.github.io/">guimuguo.github.io</a></footer>
+<footer>Full details in the proposal. Team: Guimu Guo (PI), Wajid Manzoor, Muhammad Shaheer · related system: <a href="https://wajidmanzoor.github.io/graphMine/system/">GraphMine</a> · <a href="mailto:guog@rowan.edu">guog@rowan.edu</a></footer>
 </main>
+<script>
+(function(){
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let rnd=(s=>()=>(s=(s*16807)%2147483647)/2147483647)(7);
+
+/* ---------- 1. loop ---------- */
+const NS='http://www.w3.org/2000/svg',L=document.getElementById('loop');
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||L).appendChild(e);return e}
+const B={spec:[20,110],agent:[330,110],eval:[640,110],mem:[330,225]},W=200,H=60;
+function box(k,l1,l2){const[x,y]=B[k];el('rect',{x,y,width:W,height:H,rx:10,fill:css('--accent-soft'),stroke:css('--accent'),'stroke-width':1.6});
+ const t=el('text',{x:x+W/2,y:y+(l2?26:35),'text-anchor':'middle',fill:css('--fg'),'font-size':15});t.textContent=l1;
+ if(l2){const u=el('text',{x:x+W/2,y:y+45,'text-anchor':'middle',fill:css('--fg'),'font-size':15});u.textContent=l2}}
+const P={a:'M220 140 H330',b:'M530 140 H640',fail:'M740 110 V40 H430 V110',ok:'M740 170 V255 H530',ret:'M430 225 V170'};
+for(const k in P)el('path',{d:P[k],fill:'none',stroke:k==='fail'?css('--bad'):css('--muted'),'stroke-width':1.5,'stroke-dasharray':k==='ok'||k==='ret'?'5 4':''});
+box('spec','Specification','+ structure');box('agent','Optimization','agent');box('eval','Compile · verify','· profile');box('mem','Optimization memory','+ policy validation');
+const lab=(x,y,s,c)=>{const t=el('text',{x,y,'font-size':13,fill:c,'text-anchor':'middle'});t.textContent=s};
+lab(585,32,'diagnostics → repair',css('--bad'));lab(790,215,'validated',css('--ok'));lab(395,203,'retrieve',css('--accent'));
+const memBar=el('rect',{x:B.mem[0]+10,y:B.mem[1]+H-8,width:0,height:4,rx:2,fill:css('--accent')});
+const st={c:0,f:0,o:0,m:0},$=id=>document.getElementById(id);
+function move(path,color,dur,done){const p=el('path',{d:path,fill:'none',stroke:'none'}),len=p.getTotalLength(),dot=el('circle',{r:7,fill:color});let t0=null;
+ function f(t){if(!t0)t0=t;const k=Math.min(1,(t-t0)/dur),pt=p.getPointAtLength(k*len);dot.setAttribute('cx',pt.x);dot.setAttribute('cy',pt.y);
+  if(k<1)requestAnimationFrame(f);else{dot.remove();p.remove();done&&done()}}requestAnimationFrame(f)}
+function cycle(){st.c++;$('sCand').textContent=st.c;
+ const pFail=Math.max(.15,.55-st.m*.012);
+ move(P.a,css('--accent'),600,()=>move(P.b,css('--accent'),700,()=>{
+  if(rnd()<pFail){st.f++;$('sFail').textContent=st.f;move(P.fail,css('--bad'),1100)}
+  else{st.o++;$('sOk').textContent=st.o;move(P.ok,css('--ok'),1000,()=>{st.m++;$('sMem').textContent=st.m;memBar.setAttribute('width',Math.min(W-20,st.m*4));move(P.ret,css('--accent'),500)})}}))}
+if(reduce){st.c=30;st.f=9;st.o=21;st.m=21;['sCand','sFail','sOk','sMem'].forEach((id,i)=>$(id).textContent=[30,9,21,21][i]);}
+else{cycle();setInterval(()=>{if(!document.hidden)cycle()},1400)}
+
+/* ---------- 2. tiles ---------- */
+const cv=$('tiles'),cx=cv.getContext('2d');let bucket=false;
+function degrees(skew){const n=1024,a=.3+skew*2.2/100,r=(s=>()=>(s=(s*16807)%2147483647)/2147483647)(42),d=[];
+ for(let i=0;i<n;i++){const u=r();d.push(Math.max(1,Math.round(2*Math.pow(1-u,-1/(a+.0001)))))}return d}
+function util(d){let use=0,tot=0;for(let i=0;i<d.length;i+=128){const g=d.slice(i,i+128),m=Math.max(...g);tot+=m*g.length;use+=g.reduce((a,b)=>a+b,0)}return use/tot}
+let cur=null,target=null,anim=0;
+function compute(){const d=degrees(+$('skew').value),s=[...d].sort((a,b)=>b-a);
+ $('uNo').textContent=(util(d)*100).toFixed(0)+'%';$('uYes').textContent=(util(s)*100).toFixed(0)+'%';
+ const med=[...d].sort((a,b)=>a-b)[512];$('dMax').textContent=Math.round(Math.max(...d)/med)+'×';
+ target=bucket?s:d;if(!cur)cur=target.slice();anim=1}
+function draw(){const w=cv.clientWidth,h=260,dpr=devicePixelRatio||1;if(cv.width!==w*dpr){cv.width=w*dpr;cv.height=h*dpr}
+ cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,w,h);
+ if(anim>0){for(let i=0;i<cur.length;i++)cur[i]+=(target[i]-cur[i])*.18;anim=cur.some((v,i)=>Math.abs(v-target[i])>.3)?1:0}
+ const mx=Math.max(...target),sc=v=>Math.sqrt(v/mx)*(h-14),bw=w/cur.length;
+ for(let g=0;g<8;g++){const grp=cur.slice(g*128,g*128+128),m=Math.max(...grp),x0=g*128*bw;
+  cx.fillStyle=css('--pad');cx.fillRect(x0,h-sc(m),128*bw-1,sc(m));
+  cx.fillStyle=css('--accent');grp.forEach((v,i)=>cx.fillRect(x0+i*bw,h-sc(v),Math.max(bw-.2,.6),sc(v)));
+  cx.fillStyle=css('--line');cx.fillRect(x0+128*bw-1.5,0,1.5,h)}
+ cx.fillStyle=css('--muted');cx.font='11px system-ui';cx.fillText('segment length (sqrt scale)',4,11);
+ requestAnimationFrame(draw)}
+$('skew').oninput=compute;
+$('bNo').onclick=()=>{bucket=false;$('bNo').classList.add('on');$('bYes').classList.remove('on');compute()};
+$('bYes').onclick=()=>{bucket=true;$('bYes').classList.add('on');$('bNo').classList.remove('on');compute()};
+compute();draw();
+
+/* ---------- 3. trajectory graph ---------- */
+const tc=$('traj'),tx=tc.getContext('2d'),T=['tile','buffer','bucket','layout','fuse'];
+let nodes=[],edges=[],ver=1,acc=0,rej=0,flash=0,tick=0;const r3=(s=>()=>(s=(s*16807)%2147483647)/2147483647)(99);
+function reset(){nodes=[{x:.08,y:.5,c:'--accent',lvl:0,best:1}];edges=[];ver=1;acc=0;rej=0;tick=0;$('pVer').textContent='v1';$('pAcc').textContent=0;$('pRej').textContent=0}
+function grow(){if(nodes.length>46){reset();return}
+ tick++;
+ if(tick%9===0){if(r3()<.65){acc++;ver++;flash=1;$('pVer').textContent='v'+ver;$('pAcc').textContent=acc}else{rej++;$('pRej').textContent=rej;flash=-1}return}
+ const ok=nodes.filter(n=>n.c!=='--bad'),pref=ok.filter(n=>n.c==='--ok'||n.c==='--accent'),pool=pref.length&&r3()<.4+ver*.08?pref:ok,par=pool[Math.floor(r3()*pool.length)];
+ const lvl=par.lvl+1,x=Math.min(.95,.08+lvl*.13),y=Math.max(.06,Math.min(.94,par.y+(r3()-.5)*.36));
+ const q=r3(),pf=Math.max(.12,.4-ver*.05),pg=.3+ver*.06,c=q<pf?'--bad':q<pf+pg?'--ok':'--muted';
+ const n={x,y,c,lvl,born:performance.now()};nodes.push(n);edges.push([par,n,T[Math.floor(r3()*T.length)]])}
+function drawT(){const w=tc.clientWidth,h=320,dpr=devicePixelRatio||1;if(tc.width!==w*dpr){tc.width=w*dpr;tc.height=h*dpr}
+ tx.setTransform(dpr,0,0,dpr,0,0);tx.clearRect(0,0,w,h);const now=performance.now();
+ if(flash){tx.fillStyle=flash>0?css('--warm'):css('--bad');tx.globalAlpha=.08;tx.fillRect(0,0,w,h);tx.globalAlpha=1;tx.fillStyle=flash>0?css('--warm'):css('--bad');tx.font='bold 13px system-ui';tx.fillText(flash>0?'policy update validated → v'+ver:'policy update rejected (held-out regression)',12,20);flash*=.97;if(Math.abs(flash)<.05)flash=0}
+ tx.font='10px system-ui';
+ for(const[a,b,l]of edges){tx.strokeStyle=css('--line');tx.lineWidth=1.4;tx.beginPath();tx.moveTo(a.x*w,a.y*h);tx.lineTo(b.x*w,b.y*h);tx.stroke();
+  if(w>520){tx.fillStyle=css('--muted');tx.fillText(l,(a.x+b.x)/2*w+2,(a.y+b.y)/2*h-3)}}
+ for(const n of nodes){const k=n.born?Math.min(1,(now-n.born)/400):1;tx.fillStyle=css(n.c);tx.beginPath();tx.arc(n.x*w,n.y*h,(n.lvl?6:9)*k,0,7);tx.fill()}
+ tx.fillStyle=css('--muted');tx.fillText('baseline',6,nodes[0].y*h+22);
+ requestAnimationFrame(drawT)}
+reset();if(reduce){for(let i=0;i<40;i++)grow()}else setInterval(()=>{if(!document.hidden)grow()},650);drawT();
+
+/* ---------- 4. timeline ---------- */
+const ph=[...document.querySelectorAll('#tl div')];let pi=0;
+function stepTL(){ph.forEach((d,i)=>d.classList.toggle('on',i<=pi));pi=(pi+1)%5}
+if(reduce)ph.forEach(d=>d.classList.add('on'));else{stepTL();setInterval(stepTL,1500)}
+})();
+</script>
 </body>
 </html>
